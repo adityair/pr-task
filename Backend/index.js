@@ -19,33 +19,38 @@ const app = express();
 
 const SessionStore = SequelizeStore(session.Store);
 const store = new SessionStore({
-    db: db
+  db: db,
 });
 
+// Database sudah disync, kolom approvedAt sudah ditambahkan
 // db.sync({ alter: true })
 //   .then(() => console.log("Database synchronized"))
-//   .catch(err => console.error("Sync error:", err));
+//   .catch((err) => console.error("Sync error:", err));
 
-app.use(session({
+app.use(
+  session({
     secret: process.env.SESS_SECRET,
     resave: false,
     saveUninitialized: true,
     store: store,
     cookie: {
-        secure: 'auto'
-    }
-}));
+      secure: "auto",
+    },
+  })
+);
 
 // Sync session store dengan database
 store.sync();
 
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
-}));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
-app.listen(process.env.APP_PORT, ()=> {
-    console.log(`Server up and running on port ${process.env.APP_PORT}`);
+app.listen(process.env.APP_PORT, () => {
+  console.log(`Server up and running on port ${process.env.APP_PORT}`);
 });
 
 app.use(express.json());
@@ -57,7 +62,3 @@ PurchaseRequestRoute(app);
 DepartmentRoute(app);
 ApprovalRoute(app);
 PurchaseOrderRoute(app);
-
-
-
-

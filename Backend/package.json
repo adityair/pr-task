@@ -1,24 +1,31 @@
 {
-  "name": "backend",
+  "name": "pr-task-backend",
   "version": "1.0.0",
   "description": "",
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "node test/approvalFlow.test.js",
+    "test:approval": "node test/approvalFlow.test.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "argon2": "^0.28.7",
+    "bcryptjs": "^2.4.3",
     "connect-session-sequelize": "^7.1.4",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.1",
-    "express": "^4.18.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "express-session": "^1.17.3",
-    "jsonwebtoken": "^9.0.2",
-    "mysql2": "^2.3.3",
-    "sequelize": "^6.21.3"
+    "jsonwebtoken": "^9.0.0",
+    "mysql2": "^3.2.0",
+    "sequelize": "^6.31.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }

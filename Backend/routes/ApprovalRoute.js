@@ -1,5 +1,13 @@
 import express from "express";
-import { getAllApprovals, getUserApprovals, approvePR, rejectPR, getApprovalStatus, getOpenPOs } from "../controllers/ApprovalController.js";
+import {
+  getAllApprovals,
+  getUserApprovals,
+  approvePR,
+  rejectPR,
+  getApprovalStatus,
+  getApprovalHistory,
+  getOpenPOs,
+} from "../controllers/ApprovalController.js";
 import { verifyUser, adminOnly } from "../middleware/AuthUser.js";
 
 const router = express.Router();
@@ -13,13 +21,16 @@ router.get("/list", verifyUser, adminOnly, getAllApprovals);
 router.get("/user", verifyUser, getUserApprovals);
 
 // Approve PR
-router.post("/:prId/approve", verifyUser, approvePR);
+router.post("/approve/:prId", verifyUser, approvePR);
 
 // Reject PR
-router.post("/:prId/reject", verifyUser, rejectPR);
+router.post("/reject/:prId", verifyUser, rejectPR);
 
 // Lihat status approval untuk 1 PR
-router.get("/:prId/status", verifyUser, getApprovalStatus);
+router.get("/status/:prId", verifyUser, getApprovalStatus);
+
+// Lihat riwayat approval lengkap untuk 1 PR
+router.get("/history/:prId", verifyUser, getApprovalHistory);
 
 router.get("/po/open", verifyUser, getOpenPOs);
 
