@@ -156,147 +156,149 @@ const PurchaseRequestTable = () => {
         </div>
       </div>
 
-      <div className="card">
-        <div className="card-content">
-          <div className="table-container">
-            <table className="table is-fullwidth is-striped is-hoverable">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Nama</th>
-                  <th>Deskripsi</th>
-                  <th>Pemohon</th>
-                  <th>Departemen</th>
-                  <th>Status</th>
-                  <th>Jumlah Item</th>
-                  <th>Total Nilai</th>
-                  <th>Tanggal Dibuat</th>
-                  <th>Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {purchaseRequests.length === 0 ? (
+      <div className="container is-fullhd">
+        <div className="card">
+          <div className="card-content">
+            <div className="table-container">
+              <table className="table is-fullwidth is-striped is-hoverable">
+                <thead>
                   <tr>
-                    <td colSpan="10" className="has-text-centered py-6">
-                      <p className="has-text-grey">
-                        Belum ada purchase request
-                      </p>
-                    </td>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Deskripsi</th>
+                    <th>Pemohon</th>
+                    <th>Departemen</th>
+                    <th>Status</th>
+                    <th>Jumlah Item</th>
+                    <th>Total Nilai</th>
+                    <th>Tanggal Dibuat</th>
+                    <th>Aksi</th>
                   </tr>
-                ) : (
-                  purchaseRequests.map((pr, index) => (
-                    <tr key={pr.id}>
-                      <td>{index + 1}</td>
-                      <td
-                        onClick={() => handleViewDetails(pr)}
-                        className="cursor-pointer"
-                      >
-                        <strong>{pr.name}</strong>
-                      </td>
-                      <td>
-                        {pr.description ? (
-                          <span
-                            className="has-text-truncated"
-                            style={{
-                              maxWidth: "150px",
-                              display: "inline-block",
-                            }}
-                          >
-                            {pr.description}
-                          </span>
-                        ) : (
-                          <span className="has-text-grey">-</span>
-                        )}
-                      </td>
-                      <td>
-                        <div className="is-flex is-align-items-center">
-                          <span className="icon is-small mr-1">
-                            <span>👤</span>
-                          </span>
-                          {pr.User?.name || "-"}
-                        </div>
-                      </td>
-                      <td>
-                        <div className="is-flex is-align-items-center">
-                          <span className="icon is-small mr-1">
-                            <span>🏢</span>
-                          </span>
-                          {pr.Department?.name || "-"}
-                        </div>
-                      </td>
-                      <td>{getStatusBadge(pr.status)}</td>
-                      <td>
-                        <span className="tag is-info">
-                          {pr.purchase_request_items?.length || 0} item
-                        </span>
-                      </td>
-                      <td>
-                        {pr.purchase_request_items &&
-                        pr.purchase_request_items.length > 0 ? (
-                          <strong className="has-text-success">
-                            {formatCurrency(
-                              calculateTotal(pr.purchase_request_items)
-                            )}
-                          </strong>
-                        ) : (
-                          <span className="has-text-grey">-</span>
-                        )}
-                      </td>
-                      <td>
-                        {new Date(pr.createdAt).toLocaleDateString("id-ID", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </td>
-                      <td className="is-flex is-align-items-center">
-                        <button
-                          className="button is-primary is-small mr-2"
-                          onClick={() => handleViewDetails(pr)}
-                          disabled={modalLoading}
-                        >
-                          <span>Detail</span>
-                        </button>
-
-                        {/* Tombol Riwayat Approval - hanya untuk PR yang sudah disubmit */}
-                        {(pr.status === "SUBMITTED" ||
-                          pr.status === "APPROVED" ||
-                          pr.status === "FINAL_APPROVED" ||
-                          pr.status === "REJECTED") && (
-                          <button
-                            className="button is-info is-small mr-2"
-                            onClick={() => handleViewApprovalHistory(pr)}
-                            disabled={modalLoading}
-                            title="Lihat riwayat approval"
-                          >
-                            <span>📋</span>
-                          </button>
-                        )}
-
-                        {pr.status === "DRAFT" && (
-                          <>
-                            <button
-                              className="button is-warning is-small mr-2"
-                              onClick={() => handleEdit(pr)}
-                              disabled={modalLoading}
-                            >
-                              <span>Edit</span>
-                            </button>
-                            <button
-                              className="button is-info is-small"
-                              onClick={() => handleSubmit(pr)}
-                              disabled={modalLoading}
-                            >
-                              <span>Submit</span>
-                            </button>
-                          </>
-                        )}
+                </thead>
+                <tbody>
+                  {purchaseRequests.length === 0 ? (
+                    <tr>
+                      <td colSpan="10" className="has-text-centered py-6">
+                        <p className="has-text-grey">
+                          Belum ada purchase request
+                        </p>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ) : (
+                    purchaseRequests.map((pr, index) => (
+                      <tr key={pr.id}>
+                        <td>{index + 1}</td>
+                        <td
+                          onClick={() => handleViewDetails(pr)}
+                          className="cursor-pointer"
+                        >
+                          <strong>{pr.name}</strong>
+                        </td>
+                        <td>
+                          {pr.description ? (
+                            <span
+                              className="has-text-truncated"
+                              style={{
+                                maxWidth: "150px",
+                                display: "inline-block",
+                              }}
+                            >
+                              {pr.description}
+                            </span>
+                          ) : (
+                            <span className="has-text-grey">-</span>
+                          )}
+                        </td>
+                        <td>
+                          <div className="is-flex is-align-items-center">
+                            <span className="icon is-small mr-1">
+                              <span>👤</span>
+                            </span>
+                            {pr.User?.name || "-"}
+                          </div>
+                        </td>
+                        <td>
+                          <div className="is-flex is-align-items-center">
+                            <span className="icon is-small mr-1">
+                              <span>🏢</span>
+                            </span>
+                            {pr.Department?.name || "-"}
+                          </div>
+                        </td>
+                        <td>{getStatusBadge(pr.status)}</td>
+                        <td>
+                          <span className="tag is-info">
+                            {pr.purchase_request_items?.length || 0} item
+                          </span>
+                        </td>
+                        <td>
+                          {pr.purchase_request_items &&
+                          pr.purchase_request_items.length > 0 ? (
+                            <strong className="has-text-success">
+                              {formatCurrency(
+                                calculateTotal(pr.purchase_request_items)
+                              )}
+                            </strong>
+                          ) : (
+                            <span className="has-text-grey">-</span>
+                          )}
+                        </td>
+                        <td>
+                          {new Date(pr.createdAt).toLocaleDateString("id-ID", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </td>
+                        <td className="is-flex is-align-items-center">
+                          <button
+                            className="button is-primary is-small mr-2"
+                            onClick={() => handleViewDetails(pr)}
+                            disabled={modalLoading}
+                          >
+                            <span>Detail</span>
+                          </button>
+
+                          {/* Tombol Riwayat Approval - hanya untuk PR yang sudah disubmit */}
+                          {(pr.status === "SUBMITTED" ||
+                            pr.status === "APPROVED" ||
+                            pr.status === "FINAL_APPROVED" ||
+                            pr.status === "REJECTED") && (
+                            <button
+                              className="button is-info is-small mr-2"
+                              onClick={() => handleViewApprovalHistory(pr)}
+                              disabled={modalLoading}
+                              title="Lihat riwayat approval"
+                            >
+                              <span>📋</span>
+                            </button>
+                          )}
+
+                          {pr.status === "DRAFT" && (
+                            <>
+                              <button
+                                className="button is-warning is-small mr-2"
+                                onClick={() => handleEdit(pr)}
+                                disabled={modalLoading}
+                              >
+                                <span>Edit</span>
+                              </button>
+                              <button
+                                className="button is-info is-small"
+                                onClick={() => handleSubmit(pr)}
+                                disabled={modalLoading}
+                              >
+                                <span>Submit</span>
+                              </button>
+                            </>
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
