@@ -8,7 +8,7 @@ const router = express.Router();
 router.get('/', verifyUser, getDepartments);
 
 // Endpoint: POST /api/departments
-router.post('/',  createDepartment);
+router.post('/',  verifyUser, adminOnly, createDepartment);
 
 export default (app) => {
   app.use('/api/departments', router);
