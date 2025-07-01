@@ -9,9 +9,10 @@
 
 # production
 /Frontend/build
-
+/Frontend/dist
 # misc
 /Frontend/.DS_Store
+/Frontend/.env
 /Frontend/.env.local
 /Frontend/.env.development.local
 /Frontend/.env.test.local
