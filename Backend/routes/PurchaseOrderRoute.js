@@ -4,6 +4,7 @@ import {
   assignPO,
   getAssignedPOs,
   getCompletedPOs,
+  getClosedPOs,
   approvePO,
 } from "../controllers/PurchaseOrderController.js";
 import {
@@ -19,6 +20,7 @@ router.get("/open", verifyUser, getOpenPOs);
 router.post("/assign/:poId", verifyUser, assignPO);
 router.get("/assigned", verifyUser, getAssignedPOs);
 router.get("/completed", verifyUser, getCompletedPOs);
+router.get("/closed", verifyUser, getClosedPOs);
 router.post("/approve/:poId", verifyUser, approvePO);
 
 // Item PO

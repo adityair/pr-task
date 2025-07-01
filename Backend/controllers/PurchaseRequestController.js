@@ -5,6 +5,7 @@ import Departments from "../models/DepartmentModel.js";
 import { Op } from "sequelize";
 import Approval from "../models/ApprovalModel.js";
 import PurchaseOrder from "../models/PurchaseOrderModel.js";
+import PurchaseOrderItem from "../models/PurchaseOrderItemModel.js";
 
 // Fungsi untuk generate nomor PR
 const generatePRNumber = async (departmentId) => {
@@ -350,11 +351,25 @@ export const approvePurchaseRequest = async (req, res) => {
       const poNumber = `PO-${pr.departmentId}-${sequence
         .toString()
         .padStart(5, "0")}`;
-      await PurchaseOrder.create({
+      const po = await PurchaseOrder.create({
         po_number: poNumber,
         prId: pr.id,
         status: "OPEN",
       });
+
+      // Copy item dari PR ke PO
+      const prItems = await PurchaseRequestItem.findAll({
+        where: { prId: pr.id },
+      });
+      const poItems = prItems.map((item) => ({
+        poId: po.id,
+        item_name: item.item_name,
+        quantity: item.quantity,
+        unit: item.unit,
+        note: item.note,
+        status: "PENDING",
+      }));
+      await PurchaseOrderItem.bulkCreate(poItems);
     }
 
     res.status(200).json({ msg: "Approval berhasil" });

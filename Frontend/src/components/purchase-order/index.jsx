@@ -205,7 +205,23 @@ const PurchaseOrderList = () => {
             {poList.map((po) => (
               <tr key={po.id}>
                 <td>{po.id}</td>
-                <td>{po.status}</td>
+                <td>
+                  <span
+                    className={`tag is-${
+                      po.status === "ASSIGNED"
+                        ? "info"
+                        : po.status === "COMPLETED"
+                        ? "warning"
+                        : po.status === "CLOSED"
+                        ? "success"
+                        : po.status === "OPEN"
+                        ? "light"
+                        : "dark"
+                    }`}
+                  >
+                    {po.status}
+                  </span>
+                </td>
                 <td>{po.prId}</td>
                 <td>{po.purchase_request?.name || "-"}</td>
                 <td>{po.purchase_request?.User?.name || "-"}</td>
@@ -269,7 +285,23 @@ const PurchaseOrderList = () => {
                 {completedPOs.map((po) => (
                   <tr key={po.id}>
                     <td>{po.id}</td>
-                    <td>{po.status}</td>
+                    <td>
+                      <span
+                        className={`tag is-${
+                          po.status === "ASSIGNED"
+                            ? "info"
+                            : po.status === "COMPLETED"
+                            ? "warning"
+                            : po.status === "CLOSED"
+                            ? "success"
+                            : po.status === "OPEN"
+                            ? "light"
+                            : "dark"
+                        }`}
+                      >
+                        {po.status}
+                      </span>
+                    </td>
                     <td>{po.prId}</td>
                     <td>{po.purchase_request?.name || "-"}</td>
                     <td>{po.purchase_request?.User?.name || "-"}</td>

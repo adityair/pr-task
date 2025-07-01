@@ -153,7 +153,48 @@ export const approvePO = async (req, res) => {
     if (po.status !== "COMPLETED")
       return res.status(400).json({ msg: "PO belum selesai oleh staff" });
     await po.update({ status: "CLOSED" });
+
+    // Update status PR juga
+    const pr = await PurchaseRequest.findByPk(po.prId);
+    if (pr) {
+      await pr.update({ status: "COMPLETED" });
+    }
+
     res.status(200).json({ msg: "PO sudah di-approve/closed oleh Head Dept" });
+  } catch (error) {
+    res.status(500).json({ msg: error.message });
+  }
+};
+
+// Head Departemen Purchasing: lihat PO CLOSED
+export const getClosedPOs = async (req, res) => {
+  try {
+    const user = await Users.findOne({ where: { uuid: req.userId } });
+    if (!user || user.role !== "head_department")
+      return res.status(403).json({ msg: "Akses hanya untuk head departemen" });
+    const purchasingDept = await Departments.findOne({
+      where: { name: "Purchasing" },
+    });
+    if (!purchasingDept || user.departmentId !== purchasingDept.id)
+      return res
+        .status(403)
+        .json({ msg: "Akses hanya untuk head departemen purchasing" });
+    const pos = await PurchaseOrder.findAll({
+      where: { status: "CLOSED" },
+      include: [
+        { model: Users, as: "AssignedStaff", attributes: ["name", "email"] },
+        {
+          model: PurchaseRequest,
+          as: "purchase_request",
+          include: [
+            { model: Users, as: "User", attributes: ["name", "email"] },
+            { model: Departments, as: "Department", attributes: ["name"] },
+          ],
+        },
+      ],
+      order: [["updatedAt", "DESC"]],
+    });
+    res.status(200).json(pos);
   } catch (error) {
     res.status(500).json({ msg: error.message });
   }

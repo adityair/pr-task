@@ -2,12 +2,39 @@ import PurchaseOrderItem from "../models/PurchaseOrderItemModel.js";
 import PurchaseOrder from "../models/PurchaseOrderModel.js";
 import Users from "../models/UserModel.js";
 import PurchaseRequest from "../models/PurchaseRequestModel.js";
+import PurchaseRequestItem from "../models/PurchaseRequestItemModel.js";
 
 // Ambil semua item untuk 1 PO
 export const getItemsByPO = async (req, res) => {
   const { poId } = req.params;
   try {
     const items = await PurchaseOrderItem.findAll({ where: { poId } });
+
+    // Jika tidak ada item, coba copy dari PR
+    if (items.length === 0) {
+      const po = await PurchaseOrder.findByPk(poId);
+      if (po) {
+        const prItems = await PurchaseRequestItem.findAll({
+          where: { prId: po.prId },
+        });
+        if (prItems.length > 0) {
+          const poItems = prItems.map((item) => ({
+            poId: po.id,
+            item_name: item.item_name,
+            quantity: item.quantity,
+            unit: item.unit,
+            note: item.note,
+            status: "PENDING",
+          }));
+          await PurchaseOrderItem.bulkCreate(poItems);
+
+          // Ambil item yang baru dibuat
+          const newItems = await PurchaseOrderItem.findAll({ where: { poId } });
+          return res.status(200).json(newItems);
+        }
+      }
+    }
+
     res.status(200).json(items);
   } catch (error) {
     res.status(500).json({ msg: error.message });

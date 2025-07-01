@@ -22,7 +22,9 @@ const PurchaseRequestTable = () => {
   const fetchPurchaseRequests = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("api/purchase-request/list");
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}api/purchase-request/list`
+      );
       setPurchaseRequests(response.data);
     } catch (error) {
       toast.error(
@@ -57,7 +59,7 @@ const PurchaseRequestTable = () => {
       setModalLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        `api/purchase-request/submit`,
+        `${process.env.REACT_APP_API_URL}api/purchase-request/submit`,
         {
           id: pr.id,
         },

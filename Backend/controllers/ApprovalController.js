@@ -134,17 +134,26 @@ export const approvePR = async (req, res) => {
       // Sudah di-approve head dept finance, PR selesai
       await pr.update({ status: "FINAL_APPROVED" });
 
-      // Generate nomor PO dan buat PO otomatis
+      // Ambil semua item PR
+      const prItems = await PurchaseRequestItem.findAll({
+        where: { prId: pr.id },
+      });
+      // Cek apakah semua item adalah JASA
+      const semuaJasa = prItems.every((item) => item.item_type === "JASA");
+      if (semuaJasa) {
+        // Tidak perlu buat PO, cukup update status PR menjadi COMPLETED
+        await pr.update({ status: "COMPLETED" });
+        return res.status(200).json({
+          msg: "PR Jasa Telah disetujui",
+        });
+      }
+
+      // Jika ada BARANG, buat PO seperti biasa
       const poNumber = await generatePONumber(pr.departmentId);
       const po = await PurchaseOrder.create({
         po_number: poNumber,
         prId: pr.id,
         status: "OPEN",
-      });
-
-      // Tambahkan proses generate item PO dari item PR
-      const prItems = await PurchaseRequestItem.findAll({
-        where: { prId: pr.id },
       });
       const poItems = prItems.map((item) => ({
         poId: po.id,
